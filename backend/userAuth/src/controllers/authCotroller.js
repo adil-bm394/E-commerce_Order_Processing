@@ -4,6 +4,9 @@ const statusCodes = require("../utils/statusCodes");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const serverConfig = require("../config/serverConfig");
+const { default: _enum } = require("../utils/enum");
+const { getChannel } = require("../config/rabbitmq");
+const UserModel = require("../models/userModel");
 
 //RegisterController
 const registerController = async (req, res) => {
@@ -25,6 +28,14 @@ const registerController = async (req, res) => {
       password: hashedPassword,
       phone,
     });
+
+    const channel = getChannel();
+
+    if (channel) {
+      const msg = JSON.stringify({ userId: user.userId, email: user.email });
+      channel.sendToQueue(_enum.USER_CREATED, Buffer.from(msg));
+      console.log("User created message sent to RabbitMQ");
+    }
 
     res.status(statusCodes.CREATED).json({
       success: "true",
@@ -64,6 +75,9 @@ const loginController = async (req, res) => {
     const token = jwt.sign({ id: user._id }, serverConfig.JWT_SECRET, {
       expiresIn: "1d",
     });
+
+    await redisClient.set(`auth_token_${user._id}`, token, { EX: 3600 });
+
     res.status(statusCodes.OK).json({
       success: "true",
       message: messages.LOGIN_SUCCESS,
@@ -79,7 +93,39 @@ const loginController = async (req, res) => {
   }
 };
 
+const getUserByIdController = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      res
+        .status(statusCodes.BAD_REQUEST)
+        .json({ message: messages.USER_ID_REQUIRED });
+      return;
+    }
+
+    const user = await UserModel.findOne({ userId });
+    if (!user) {
+      res
+        .status(statusCodes.NOT_FOUND)
+        .json({ message: messages.USER_NOT_FOUND });
+      return;
+    }
+
+    res.status(statusCodes.OK).json({
+      success: "true",
+      message: messages.GET_USER_DETAILS,
+      user,
+    });
+  } catch (error) {
+    res
+      .status(statusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: messages.INTERNAL_SERVER_ERROR, error });
+  }
+};
+
 module.exports = {
   registerController,
   loginController,
+  getUserByIdController,
 };

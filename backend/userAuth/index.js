@@ -5,6 +5,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 const connectDB = require("./config/dbConnection");
 const serverConfig = require("./src/config/serverConfig");
+const { connectRabbitMQ } = require("./config/rabbitmq");
+
 
 dotenv.config();
 const app = express();
@@ -18,20 +20,14 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 
-// Routes for testing
-app.get("/", async (req, res) => {
-  try {
-    res.send("Hello Word");
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
 
 //Routes
 app.use("/api/v1", require("./routes/authRoutes"));
 
 
-const PORT = serverConfig.PORT || 3000;
+connectRabbitMQ();
+
+const PORT = serverConfig.PORT || 3004;
 app.listen(PORT, () => {
   console.log(`Server is running on Port ${PORT}`.bgGreen.white);
 });
