@@ -23,7 +23,6 @@ const connectRabbitMQ = async () => {
 
       if (payment.status === "success") {
         try {
-          // Fetch the order and update it
           const response = await axios.put(
             `${serverConfig.UPDATEORDER_API}/${payment.orderId}`,
             {
