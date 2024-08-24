@@ -7,9 +7,9 @@ const OrderModel = require("../models/orderModel");
 
 //CREATE ORDER
 const createOrderController = async (req, res) => {
-  const { product, quantity } = req.body;
+  const { product, price, quantity } = req.body;
 
-  const newOrder = new OrderModel({ product, quantity});
+  const newOrder = new OrderModel({ product, price ,quantity});
   await newOrder.save();
 
   // Cache order in Redis
