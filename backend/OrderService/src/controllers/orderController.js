@@ -64,6 +64,7 @@ const getOrderController = async (req, res) => {
 const updateOrderController = async (req, res) => {
   const { id } = req.params;
   const { product, status } = req.body;
+  
 
   // Find the order by ID
   const order = await OrderModel.findById(id);
@@ -74,12 +75,8 @@ const updateOrderController = async (req, res) => {
       message: messages.ORDER_NOT_FOUND,
     });
   }
-
-  // order.status = "success";
   
-  // // Update the order fields
-  // if (product !== undefined) order.product = product;
-  // if (status !== undefined) order.status = status;
+   if (status !== undefined) order.status = status;
 
   // Save the updated order
   await order.save();

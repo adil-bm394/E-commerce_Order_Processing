@@ -3,7 +3,8 @@ const colors = require("colors");
 const axios = require("axios");
 const redisClient = require("./radis");
 const FullfillmentModel = require("../models/fullfillmentModel");
-const serverConfig = require("../../../OrderService/src/config/serverConfig");
+const serverConfig = require("./serverConfig");
+
 
 let channel, connection;
 
@@ -24,23 +25,20 @@ const connectRabbitMQ = async () => {
         try {
           // Fetch the order and update it
           const response = await axios.put(
-            `http://localhost:8000/api/v1/updateOrders/${payment.orderId}`,
+            `${serverConfig.UPDATEORDER_API}/${payment.orderId}`,
             {
-              status: "fulfilled",
+              status: "success",
             }
           );
 
           const order = response.data.order;
-          console.log("response from update api ", order);
+          //console.log("response from update api ", order);
 
-          // Save fulfillment data to the database
           const fulfillment = new FullfillmentModel({
             orderId: order._id.toString(),
             status: "fulfilled",
           });
           await fulfillment.save();
-
-          console.log("Fulfillment saved:", fulfillment);
 
           // Cache updated order in Redis
           await redisClient.setEx(
@@ -55,7 +53,7 @@ const connectRabbitMQ = async () => {
             Buffer.from(JSON.stringify(order))
           );
         } catch (error) {
-          console.error("Error updating order:", error.message);
+          console.error("[Fullfillment Service]Error updating order:", error.message);
         }
       }
 
