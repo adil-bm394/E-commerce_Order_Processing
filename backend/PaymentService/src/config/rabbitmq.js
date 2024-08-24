@@ -1,6 +1,4 @@
 const amqp = require("amqplib");
-const redisClient = require("./redis");
-const paymentProcessor = require("./paymentProcessor");
 const serverConfig = require("./serverConfig");
 
 let channel, connection;
@@ -18,19 +16,17 @@ async function connectRabbitMQ() {
 
       console.log("Received order:", order);
 
-      // Process payment
-      await paymentProcessor.processPayment(order);
+      // Import here to avoid circular dependency
+      const { processPayment } = require("./paymentProcessor");
+      await processPayment(order);
 
       channel.ack(msg);
     });
 
-    console.log(
-      "[Payment Service]RabbitMQ connected and consumer set up.".bgGreen.white
-    );
+    console.log(`[Payment Service] RabbitMQ connected and consumer set up.`.bgGreen.red);
   } catch (err) {
     console.error(
-      `[Payment Service]Failed to connect to RabbitMQ:${err.message}`.bgRed
-        .white
+      `[Payment Service] Failed to connect to RabbitMQ: ${err.message}`.bgRed.white
     );
     process.exit(1);
   }

@@ -27,10 +27,10 @@ const processPayment = async (order) => {
       );
       console.log("Payment processed and saved:", payment);
     } else {
-      console.error("[Payment Service] RabbitMQ channel is not initialized");
+      console.error(`[Payment Service] RabbitMQ channel is not initialized`.bgRed.white);
     }
   } catch (error) {
-    console.error("[Payment Service] Error processing payment:", error.message);
+    console.error(`[Payment Service] Error processing payment: ${error.message}`.bgRed.white);
   }
 };
 
