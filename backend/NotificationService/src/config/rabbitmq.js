@@ -27,7 +27,6 @@ async function connectRabbitMQ() {
           //console.log("Response from get API:", response.data);
 
           await sendNotification(response.data.user, order.product);
-          
 
           channel.ack(msg);
         } catch (error) {
