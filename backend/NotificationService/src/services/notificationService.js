@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 const serverConfig = require("../config/serverConfig");
 const getNotificationTemplate = require("./emailTemplate");
 const messages = require("../utils/messages");
+const getSubject = require("../utils/messages");
 
 require("dotenv").config();
 
@@ -18,7 +19,7 @@ const sendNotification = (user ,product) => {
     const mailOptions = {
       from: serverConfig.mail,
       to: user.email,
-      subject:`Order Confirmation: ${product} - Your Order has been Processed!`,
+      subject: getSubject(product),
       html: getNotificationTemplate(user.name, product),
     };
     console.log(`Notification sent for order ${product}`.bgGreen.white);
