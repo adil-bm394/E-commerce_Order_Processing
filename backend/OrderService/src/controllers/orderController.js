@@ -10,7 +10,6 @@ const createOrderController = async (req, res) => {
   const { product, price, quantity } = req.body;
   const userId  = req.userId;
 
-
    if (!userId) {
      return res.status(statusCodes.UNAUTHORIZED).send({
        success: false,

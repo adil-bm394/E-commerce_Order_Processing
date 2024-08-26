@@ -39,7 +39,7 @@ const registerController = async (req, res) => {
       });
 
       channel.sendToQueue(rabbitMQEvents.USER_CREATED, Buffer.from(msg));
-     // console.log("User created message sent to RabbitMQ");
+      // console.log("User created message sent to RabbitMQ");
     }
 
     res.status(statusCodes.CREATED).json({
@@ -48,7 +48,7 @@ const registerController = async (req, res) => {
       user: newUser,
     });
   } catch (error) {
-    console.log(error);
+    console.log(`[UserAuth Service] error in RegisterController ${error}`);
     res
       .status(statusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: error.message });
@@ -90,7 +90,7 @@ const loginController = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.log(error);
+    console.log(`[UserAuth Service] error in LoginController ${error}`);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
       error: error.message,
@@ -110,7 +110,7 @@ const getUserByIdController = async (req, res) => {
       return;
     }
 
-    const user = await UserModel.findOne({ _id:userId });
+    const user = await UserModel.findOne({ _id: userId });
     if (!user) {
       res
         .status(statusCodes.NOT_FOUND)
@@ -124,6 +124,7 @@ const getUserByIdController = async (req, res) => {
       user,
     });
   } catch (error) {
+    console.log(`[userAuth Service] error in getUserByIdController ${error}`);
     res
       .status(statusCodes.INTERNAL_SERVER_ERROR)
       .json({ message: messages.INTERNAL_SERVER_ERROR, error });
