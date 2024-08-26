@@ -20,10 +20,8 @@ const createOrderController = async (req, res) => {
   const newOrder = new OrderModel({ product, price, quantity, userId });
   await newOrder.save();
 
-  // Cache order in Redis
   redisClient.setEx(newOrder._id.toString(), 3600, JSON.stringify(newOrder));
 
-  // Publish to RabbitMQ
   const channel = getChannel();
   if (channel) {
     channel.sendToQueue("order.created", Buffer.from(JSON.stringify(newOrder)));
@@ -43,7 +41,6 @@ const createOrderController = async (req, res) => {
 const getOrderController = async (req, res) => {
   const { id } = req.params;
 
-  // Check Redis cache first
   const cachedOrder = await redisClient.get(id);
   if (cachedOrder) {
     return res.send(JSON.parse(cachedOrder));
@@ -57,7 +54,6 @@ const getOrderController = async (req, res) => {
     });
   }
 
-  // Cache order in Redis
   redisClient.setEx(order._id.toString(), 3600, JSON.stringify(order));
 
   res.status(statusCodes.OK).send({

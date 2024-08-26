@@ -14,7 +14,6 @@ const processPayment = async (order) => {
     });
     await payment.save();
 
-    // Cache payment in Redis
     redisClient.setEx(payment._id.toString(), 3600, JSON.stringify(payment));
 
     const channel = getChannel();
