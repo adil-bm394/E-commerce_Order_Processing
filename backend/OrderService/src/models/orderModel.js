@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
     product: {
       type: String,
       required: true,
@@ -18,6 +23,7 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
       default: "created",
+      enum: ["created", "success",], 
     },
   },
   { timestamps: true }

@@ -13,7 +13,8 @@ const messages = {
   ORDER_NOT_FOUND: "Order Not Found",
   ORDER_UPDATED: "Order has been updated successfully.",
   TOKEN_MISSING:"Token Is Missing",
-  INVALID_TOKEN:"Token is Missmatch"
+  INVALID_TOKEN:"Token is Missmatch",
+  USER_ID_REQUIRED:"User Id required from Params"
 };
 
 module.exports = messages;

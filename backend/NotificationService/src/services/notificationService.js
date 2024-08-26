@@ -1,15 +1,8 @@
 const nodemailer = require("nodemailer");
-const getOtpEmailTemplate = require("./EmailTemplate");
-const serverConfig = require("../config/server-config");
+const serverConfig = require("../config/serverConfig");
+const getNotificationTemplate = require("./emailTemplate");
 
 require("dotenv").config();
-
-console.log(
-  "email=>",
-  serverConfig.mail,
-  "check password=>",
-  serverConfig.pass
-);
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -19,19 +12,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendOtpEmail = (email, otp) => {
+const sendNotification = (user ,product) => {
+  console.log("dfghj",user.email);
   try {
     const mailOptions = {
       from: serverConfig.mail,
-      to: email,
-      subject: `Order Fulfillment Notification for Order ${order._id}`,
-      html: getOtpEmailTemplate(email, otp),
+      to: user.email,
+      subject: `Order Fulfillment Notification for Order ${product}`,
+      html: getNotificationTemplate(user.name, product),
     };
-    console.log(`Notification sent for order ${order._id}`);
+    console.log(`Notification sent for order ${product}`);
     return transporter.sendMail(mailOptions);
   } catch (error) {
-    console.error(`Failed to send notification:${error}`.bgRed.white);
+    console.error(`[Notification Service]Failed to send notification:${error}`.bgRed.white);
   }
 };
 
-module.exports = sendOtpEmail;
+module.exports = sendNotification;

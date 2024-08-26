@@ -43,7 +43,7 @@ const registerController = async (req, res) => {
     }
 
     res.status(statusCodes.CREATED).json({
-      success: "true",
+      success: true,
       message: messages.REGISTER_SUCCESS,
       user: newUser,
     });
@@ -64,7 +64,7 @@ const loginController = async (req, res) => {
 
     if (!user) {
       return res.status(statusCodes.NOT_FOUND).json({
-        success: "false",
+        success: false,
         message: messages.USER_NOT_FOUND,
       });
     }
@@ -73,7 +73,7 @@ const loginController = async (req, res) => {
 
     if (!passwordMatch) {
       return res.status(statusCodes.UNAUTHORIZED).json({
-        success: "false",
+        success: false,
         message: messages.INVALID_CREDENTIALS,
       });
     }
@@ -84,7 +84,7 @@ const loginController = async (req, res) => {
     await redisClient.set(`auth_token_${user._id}`, token, { EX: 3600 });
 
     res.status(statusCodes.OK).json({
-      success: "true",
+      success: true,
       message: messages.LOGIN_SUCCESS,
       token,
       user,
@@ -92,7 +92,7 @@ const loginController = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).json({
-      success: "false",
+      success: false,
       error: error.message,
     });
   }
@@ -119,7 +119,7 @@ const getUserByIdController = async (req, res) => {
     }
 
     res.status(statusCodes.OK).json({
-      success: "true",
+      success: true,
       message: messages.GET_USER_DETAILS,
       user,
     });

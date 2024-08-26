@@ -8,4 +8,5 @@ module.exports = {
   LOCALHOST: process.env.LOCALHOST,
   mail: process.env.mail,
   pass: process.env.pass,
+  GET_USER_DETAIL_API :process.env.GET_USER_DETAIL_API
 };

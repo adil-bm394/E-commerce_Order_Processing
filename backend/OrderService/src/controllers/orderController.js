@@ -8,8 +8,18 @@ const OrderModel = require("../models/orderModel");
 //CREATE ORDER
 const createOrderController = async (req, res) => {
   const { product, price, quantity } = req.body;
+  const userId  = req.userId;
+  
+  console.log("userId from req",userId);
 
-  const newOrder = new OrderModel({ product, price ,quantity});
+   if (!userId) {
+     return res.status(statusCodes.UNAUTHORIZED).send({
+       success: false,
+       message: messages.USER_NOT_AUTHORIZED,
+     });
+   }
+
+  const newOrder = new OrderModel({ product, price, quantity, userId });
   await newOrder.save();
 
   // Cache order in Redis

@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.post("/createOrder", authMiddleware,createOrderController);
 router.get("/getOrder/:id",authMiddleware, getOrderController);
-router.put("/updateOrders/:id",authMiddleware, updateOrderController);
+router.put("/updateOrderStatus/:id", updateOrderController);
 
 module.exports = router;

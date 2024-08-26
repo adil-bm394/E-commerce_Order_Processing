@@ -1,6 +1,7 @@
 const PaymentModel = require("../models/paymentModel");
 const redisClient = require("../config/redis");
 const { getChannel } = require("./rabbitmq");
+const rabbitMQEvents = require("../utils/rabbitMQEvents");
 
 
 const processPayment = async (order) => {
@@ -16,13 +17,11 @@ const processPayment = async (order) => {
     // Cache payment in Redis
     redisClient.setEx(payment._id.toString(), 3600, JSON.stringify(payment));
 
-    // Publish payment status to RabbitMQ
     const channel = getChannel();
     
     if (channel) {
-      console.log("chhc")
       channel.sendToQueue(
-        "payment.processed",
+        rabbitMQEvents.PAYMENT_PROCESSED,
         Buffer.from(JSON.stringify(payment))
       );
       console.log("Payment processed and saved:", payment);

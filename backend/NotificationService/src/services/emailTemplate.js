@@ -1,16 +1,14 @@
-const getOtpEmailTemplate = (email, otp) => {
+const getNotificationTemplate = (name, product) => {
   return `
     <div style="font-family: Arial, sans-serif; text-align: center;">
-      <h2>Your OTP Code</h2>
-      <p>Hello,</p>
-      <p>Your OTP code is: <strong>${otp}</strong></p>
-      <p>Please use this code to complete your verification. This code is valid for 5 minutes.</p>
-      <p>If you did not request this, please ignore this email.</p>
+      <h2>Your Ordered Product: ${product}</h2>
+      <p>Hello, ${name}</p>
+      <p>Your order has been successfully processed.</p>
       <br>
       <p>Thank you,</p>
-      <p>Binmile</p>
+      <p>${name}</p>
     </div>
   `;
 };
 
-module.exports = getOtpEmailTemplate;
+module.exports = getNotificationTemplate;
