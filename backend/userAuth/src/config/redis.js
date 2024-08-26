@@ -9,7 +9,7 @@ redisClient
   })
   .catch((err) => {
     console.error(
-      `[User Service] Redis connection error:, ${err}`.bgRed.white
+      `[User Service] Redis connection error: ${err}`.bgRed.white
     );
   });
 

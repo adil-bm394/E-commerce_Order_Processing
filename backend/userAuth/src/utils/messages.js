@@ -4,7 +4,7 @@ const messages = {
   USER_EXISTS: "User already exists",
   USER_NOT_FOUND: "User not found",
   USER_ID_REQUIRED: "User ID is Required",
-  GET_USER_DETAILS: "Successfully Fetched User Details By Id",
+  GET_USER_DETAILS: "Successfully Fetched User Details",
   INVALID_CREDENTIALS: "Invalid credentials",
   INTERNAL_SERVER_ERROR: "An internal server error occurred",
   MISSING_AUTH_HEADER: "Missing Authorization header",

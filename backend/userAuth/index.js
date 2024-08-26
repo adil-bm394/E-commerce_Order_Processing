@@ -3,9 +3,9 @@ const dotenv = require("dotenv");
 const colors = require("colors");
 const cors = require("cors");
 const morgan = require("morgan");
-const connectDB = require("./config/dbConnection");
 const serverConfig = require("./src/config/serverConfig");
-const { connectRabbitMQ } = require("./config/rabbitmq");
+const { connectRabbitMQ } = require("./src/config/rabbitmq");
+const connectDB = require("./src/config/dbConnection");
 
 
 dotenv.config();
@@ -22,7 +22,7 @@ app.use(cors());
 
 
 //Routes
-app.use("/api/v1", require("./routes/authRoutes"));
+app.use("/api/v1", require("./src/routes/authRoute"));
 
 
 connectRabbitMQ();

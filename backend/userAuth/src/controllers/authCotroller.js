@@ -1,16 +1,18 @@
 const userModel = require("../models/userModel");
 const messages = require("../utils/messages");
-const statusCodes = require("../utils/statusCodes");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const serverConfig = require("../config/serverConfig");
-const { default: _enum } = require("../utils/enum");
+const { default: _enum } = require("../utils/rabbitMQEvents");
 const { getChannel } = require("../config/rabbitmq");
 const UserModel = require("../models/userModel");
+const statusCodes = require("../utils/statusCode");
+const rabbitMQEvents = require("../utils/rabbitMQEvents");
+const redisClient = require("../config/redis");
 
 //RegisterController
 const registerController = async (req, res) => {
-  const { name, email, password, phone } = req.body;
+  const { name, email, password } = req.body;
   const existingUser = await userModel.findOne({ email });
   if (existingUser) {
     return res
@@ -26,15 +28,18 @@ const registerController = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      phone,
     });
 
     const channel = getChannel();
 
     if (channel) {
-      const msg = JSON.stringify({ userId: user.userId, email: user.email });
-      channel.sendToQueue(_enum.USER_CREATED, Buffer.from(msg));
-      console.log("User created message sent to RabbitMQ");
+      const msg = JSON.stringify({
+        userId: newUser._id,
+        email: newUser.email,
+      });
+
+      channel.sendToQueue(rabbitMQEvents.USER_CREATED, Buffer.from(msg));
+     // console.log("User created message sent to RabbitMQ");
     }
 
     res.status(statusCodes.CREATED).json({
@@ -93,6 +98,7 @@ const loginController = async (req, res) => {
   }
 };
 
+//Get user Detail By ID
 const getUserByIdController = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -104,7 +110,7 @@ const getUserByIdController = async (req, res) => {
       return;
     }
 
-    const user = await UserModel.findOne({ userId });
+    const user = await UserModel.findOne({ _id:userId });
     if (!user) {
       res
         .status(statusCodes.NOT_FOUND)

@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
-const statusCodes = require("../utils/statusCodes");
 const messages = require("../utils/messages");
 const UserModel = require("../models/userModel");
 const serverConfig = require("../config/serverConfig");
+const statusCodes = require("../utils/statusCode");
 
 const authMiddleware = async (req, res, next) => {
   const token = req.header("Authorization")?.split(" ")[1];
@@ -28,7 +28,7 @@ const authMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.error("Authentication error:", error);
+    console.error(`[AuthMiddleware in User Processing]Authentication error: ${error}`.bgRed.white);
     return res.status(statusCodes.UNAUTHORIZED).json({
       success: false,
       message: messages.INVALID_TOKEN,
