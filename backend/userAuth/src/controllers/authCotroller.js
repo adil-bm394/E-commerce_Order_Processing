@@ -78,14 +78,17 @@ const loginController = async (req, res) => {
       user,
     });
 
-    user.password = undefined;
-    redisClient.setEx(user._id.toString(), 3600, JSON.stringify(user));
+   const userData =({
+     email: user.email,
+     name: user.name,
+   });
+    redisClient.setEx(user._id.toString(), 3600, JSON.stringify(userData));
 
     const channel = getChannel();
 
     if (channel) {
       const msg = JSON.stringify({
-        user,
+        userData,
       });
 
       channel.sendToQueue(rabbitMQEvents.USER_CREATED, Buffer.from(msg));

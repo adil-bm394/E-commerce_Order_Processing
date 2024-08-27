@@ -8,7 +8,6 @@ const getUserDetail = async (userId) => {
       console.log(`[getUserDetails] No data found for userId: ${userId}`.bgRed.white);
       return null; 
     }
-
     const jsonData = JSON.parse(data);
     return jsonData;
   } catch (error) {

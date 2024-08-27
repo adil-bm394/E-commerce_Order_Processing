@@ -23,7 +23,7 @@ async function connectRabbitMQ() {
 
            // =========  Get user details from Redis =============
           const userDetail = await getUserDetail(order.userId);
-          console.log("User details from Redis:", userDetail);
+           console.log("User details from Redis:", userDetail);
 
           //================= Fetch UserDetails from  Get Api ===========
 
