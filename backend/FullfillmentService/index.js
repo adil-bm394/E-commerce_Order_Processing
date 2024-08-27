@@ -22,7 +22,7 @@ app.use(cors());
 // Initialize RabbitMQ connection
 connectRabbitMQ();
 
-const PORT = serverConfig.PORT || 3002;
+const PORT = serverConfig.PORT || 3003;
 app.listen(PORT, async () => {
   console.log(`Fullfillment service is running on Port ${PORT}`.bgCyan.white);
   //await startService();

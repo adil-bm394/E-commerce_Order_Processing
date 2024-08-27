@@ -11,10 +11,10 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors());
 
-// Start RabbitMQ connection
+
 connectRabbitMQ();
 
-const PORT = serverConfig.PORT || 3003;
+const PORT = serverConfig.PORT || 3004;
 app.listen(PORT, () => {
   console.log(`Notification service is running on port ${PORT}`.bgGreen.white);
 });

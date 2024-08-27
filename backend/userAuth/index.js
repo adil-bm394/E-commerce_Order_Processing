@@ -27,7 +27,7 @@ app.use("/api/v1", require("./src/routes/authRoute"));
 
 connectRabbitMQ();
 
-const PORT = serverConfig.PORT || 3004;
+const PORT = serverConfig.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on Port ${PORT}`.bgGreen.white);
 });

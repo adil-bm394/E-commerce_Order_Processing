@@ -17,8 +17,8 @@ async function connectRabbitMQ() {
 
      // console.log("Received order:", order);
 
-      // Import here to avoid circular dependency
-      const { processPayment } = require("./paymentProcessor");
+      // I Import here to avoid circular dependency
+      const { processPayment } = require("../services/paymentProcessor");
       await processPayment(order);
 
       channel.ack(msg);

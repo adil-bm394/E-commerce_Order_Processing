@@ -1,13 +1,14 @@
 const PaymentModel = require("../models/paymentModel");
 const redisClient = require("../config/redis");
-const { getChannel } = require("./rabbitmq");
+const { getChannel } = require("../config/rabbitmq");
 const rabbitMQEvents = require("../utils/rabbitMQEvents");
+const messages = require("../utils/messages");
 
 
 const processPayment = async (order) => {
   try {
-    // Mock payment processing
-    const paymentStatus = Math.random() > 0.2 ? "success" : "failure";
+  
+    const paymentStatus = Math.random() > 0.2 ? messages.SUCCESS : messages.FAILURE;
     const payment = new PaymentModel({
       orderId: order._id,
       status: paymentStatus,

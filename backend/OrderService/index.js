@@ -23,7 +23,7 @@ app.use("/api/v1", require("./src/routes/orderRoutes"));
 
 
 
-const PORT = serverConfig.PORT || 3000;
+const PORT = serverConfig.PORT || 3001;
 app.listen(PORT, async() => {
   console.log(`Order Processing is running on Port ${PORT}`.bgCyan.white);
  
