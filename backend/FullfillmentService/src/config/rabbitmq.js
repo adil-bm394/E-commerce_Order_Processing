@@ -30,7 +30,7 @@ const connectRabbitMQ = async () => {
           );
 
           const order = response.data.order;
-          console.log("response from update api ", order);
+          //console.log("response from update api ", order);
 
           const fulfillment = new FullfillmentModel({
             orderId: order._id.toString(),

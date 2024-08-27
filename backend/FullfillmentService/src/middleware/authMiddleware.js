@@ -16,14 +16,6 @@ const authMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, serverConfig.JWT_SECRET);
-    // const user = await UserModel.findById(decoded.id);
-
-    // if (!user) {
-    //   return res.status(statusCodes.NOT_FOUND).json({
-    //     success: false,
-    //     message: messages.USER_NOT_FOUND,
-    //   });
-    // }
 
     const redisToken = await redisClient.get(`auth_token_${decoded.userId}`);
 

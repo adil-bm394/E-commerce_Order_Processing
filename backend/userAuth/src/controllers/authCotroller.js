@@ -30,18 +30,6 @@ const registerController = async (req, res) => {
       password: hashedPassword,
     });
 
-    const channel = getChannel();
-
-    if (channel) {
-      const msg = JSON.stringify({
-        userId: newUser._id,
-        email: newUser.email,
-      });
-
-      channel.sendToQueue(rabbitMQEvents.USER_CREATED, Buffer.from(msg));
-      // console.log("User created message sent to RabbitMQ");
-    }
-
     res.status(statusCodes.CREATED).json({
       success: true,
       message: messages.REGISTER_SUCCESS,
@@ -89,6 +77,20 @@ const loginController = async (req, res) => {
       token,
       user,
     });
+
+    user.password = undefined;
+    redisClient.setEx(user._id.toString(), 3600, JSON.stringify(user));
+
+    const channel = getChannel();
+
+    if (channel) {
+      const msg = JSON.stringify({
+        user,
+      });
+
+      channel.sendToQueue(rabbitMQEvents.USER_CREATED, Buffer.from(msg));
+      // console.log("User Login message sent to RabbitMQ");
+    }
   } catch (error) {
     console.log(`[UserAuth Service] error in LoginController ${error}`);
     res.status(statusCodes.INTERNAL_SERVER_ERROR).json({

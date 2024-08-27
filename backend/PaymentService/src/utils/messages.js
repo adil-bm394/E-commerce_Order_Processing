@@ -1,7 +1,7 @@
 const messages = {
   INVALID_TOKEN: "Invalid Token",
-  SUCCESS: "Success",
-  FAILURE: "Failure",
+  SUCCESS: "success",
+  FAILURE: "failure",
 };
 
 module.exports = messages;

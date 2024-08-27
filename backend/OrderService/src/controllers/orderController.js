@@ -69,8 +69,6 @@ const updateOrderController = async (req, res) => {
   const { id } = req.params;
   const { product, status } = req.body;
   
-
-  // Find the order by ID
   const order = await OrderModel.findById(id);
 
   if (!order) {
@@ -82,13 +80,10 @@ const updateOrderController = async (req, res) => {
   
    if (status !== undefined) order.status = status;
 
-  // Save the updated order
   await order.save();
 
-  // Update the cache in Redis
   redisClient.setEx(order._id.toString(), 3600, JSON.stringify(order));
 
-  // Publish updated order status to RabbitMQ
   const channel = getChannel();
   if (channel) {
     channel.sendToQueue("order.updated", Buffer.from(JSON.stringify(order)));

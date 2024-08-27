@@ -3,6 +3,7 @@ const axios = require("axios");
 const rabbitMQEvents = require("../utils/rabbitMQEvents");
 const sendNotification = require("../services/notificationService");
 const serverConfig = require("./serverConfig");
+const getUserDetail = require("../utils/getUserDetails");
 
 let channel, connection;
 
@@ -20,13 +21,19 @@ async function connectRabbitMQ() {
           const order = JSON.parse(msg.content.toString());
           console.log("Received order fulfillment:", order);
 
-          const response = await axios.get(
-            `${serverConfig.GET_USER_DETAIL_API}/${order.userId}`
-          );
+           // =========  Get user details from Redis =============
+          const userDetail = await getUserDetail(order.userId);
+          console.log("User details from Redis:", userDetail);
 
-          //console.log("Response from get API:", response.data);
+          //================= Fetch UserDetails from  Get Api ===========
 
-          await sendNotification(response.data.user, order.product);
+          // const response = await axios.get(
+          //   `${serverConfig.GET_USER_DETAIL_API}/${order.userId}`
+          // );
+          // console.log("Response from get API:", response.data);
+
+        //==============================================================
+          await sendNotification(userDetail, order.product);
 
           channel.ack(msg);
         } catch (error) {
